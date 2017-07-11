@@ -1,0 +1,39 @@
+<?php
+/**
+ * @file
+ * A very lightweight jQuery lightbox plugin.
+ */
+
+/**
+ * Implements hook_library_info().
+ */
+function featherlight_library_info() {
+  $libraries['featherlight'] = array(
+    'title' => 'Featherlight',
+    'website' => 'https://noelboss.github.io/featherlight/',
+    'version' => '1.7.6',
+    'js' => array(
+      backdrop_get_path('module', 'featherlight') . '/library/featherlight.min.js' => array(),
+    ),
+    'css' => array(
+      backdrop_get_path('module', 'featherlight') . '/library/featherlight.min.css' => array(),
+    ),
+  );
+  $libraries['featherlight-gallery'] = array(
+    'title' => 'Featherlight Gallery',
+    'website' => 'https://noelboss.github.io/featherlight/gallery.html',
+    'version' => '1.7.6',
+    'js' => array(
+      backdrop_get_path('module', 'featherlight') . '/library/featherlight.gallery.min.js' => array(),
+    ),
+    'css' => array(
+      backdrop_get_path('module', 'featherlight') . '/library/featherlight.gallery.min.css' => array(),
+    ),
+    'dependencies' => array(
+      array('featherlight', 'featherlight'),
+    ),
+  );
+
+  return $libraries;
+}
+
