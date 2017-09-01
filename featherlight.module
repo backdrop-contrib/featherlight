@@ -37,3 +37,161 @@ function featherlight_library_info() {
   return $libraries;
 }
 
+/**
+ * Implements hook_theme().
+ */
+function featherlight_theme($existing, $type, $theme, $path) {
+  return array(
+    'featherlight' => array(
+      'variables' => array(
+        'item' => array(),
+        'content_image_style' => '',
+        'lightbox_image_style' => '',
+      ),
+    ),
+  );
+}
+
+/**
+ * Returns HTML for a Featherlight lightbox.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - item: An array of image data.
+ *   - content_image_style: The image style to use for the content image.
+ *   - lightbox_image_style: The image style to use for the lightbox image.
+ *
+ * @ingroup themeable
+ */
+function theme_featherlight($variables = array()) {
+  $item = $variables['item'];
+
+  // Add Featherlight library files.
+  backdrop_add_library('featherlight', 'featherlight-gallery', TRUE);
+
+  // Generate content image.
+  $image_variables = array(
+    'uri' => $item['uri'],
+    'width' => $item['width'],
+    'height' => $item['height'],
+    'alt' => $item['alt'],
+    'title' => $item['title'],
+  );
+  if (!empty($variables['content_image_style'])) {
+    $image_variables['style_name'] = $variables['content_image_style'];
+    $image = theme('image_style', $image_variables);
+  }
+  else {
+    $image = theme('image', $image_variables);
+  }
+
+  // Generate lightbox image URL.
+  if (!empty($variables['lightbox_image_style'])) {
+    $url = image_style_url($variables['lightbox_image_style'], $item['uri']);
+  }
+  else {
+    $url = file_create_url($item['uri']);
+  }
+
+  // Generate link options.
+  $options = array(
+    'attributes' => array(
+      'data-featherlight' => 'image',
+      'class' => array('featherlight-lightbox'),
+    ),
+    'html' => TRUE,
+  );
+
+  return l($image, $url, $options);
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function featherlight_field_formatter_info() {
+  return array(
+    'featherlight' => array(
+      'label' => t('Featherlight'),
+      'field types' => array('image'),
+      'settings' => array(
+        'featherlight_image_style_content' => '',
+        'featherlight_image_style_lightbox' => '',
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function featherlight_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $image_styles = image_style_options(FALSE, PASS_THROUGH);
+
+  $element['featherlight_image_style_content'] = array(
+    '#type' => 'select',
+    '#title' => t('Content image style'),
+    '#description' => t('The image style to use for the <em>content</em> image.'),
+    '#options' => $image_styles,
+    '#empty_option' => t('None (original image)'),
+    '#default_value' => $settings['featherlight_image_style_content'],
+  );
+  $element['featherlight_image_style_lightbox'] = array(
+    '#type' => 'select',
+    '#title' => t('Lightbox image style'),
+    '#description' => t('The image style to use for the <em>lightbox</em> image.'),
+    '#options' => $image_styles,
+    '#empty_option' => t('None (original image)'),
+    '#default_value' => $settings['featherlight_image_style_lightbox'],
+  );
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function featherlight_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $summary = array();
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+  $image_styles = image_style_options(FALSE, PASS_THROUGH);
+
+  if (!empty($settings['featherlight_image_style_content'])) {
+    $summary[] = t('Content image style: @content', array('@content' => $image_styles[$settings['featherlight_image_style_content']]));
+  }
+  else {
+    $summary[] = t('Content image style: None (original image)');
+  }
+
+  if (!empty($settings['featherlight_image_style_lightbox'])) {
+    $summary[] = t('Lightbox image style: @lightbox', array('@lightbox' => $image_styles[$settings['featherlight_image_style_lightbox']]));
+  }
+  else {
+    $summary[] = t('Lightbox image style: None (original image)');
+  }
+
+  return implode('<br />', $summary);
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function featherlight_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  $settings = $display['settings'];
+
+  foreach ($items as $delta => $item) {
+    $element[$delta] = array(
+      '#theme' => 'featherlight',
+      '#item' => $item,
+      '#content_image_style' => $settings['featherlight_image_style_content'],
+      '#lightbox_image_style' => $settings['featherlight_image_style_lightbox'],
+    );
+  }
+
+  return $element;
+}
+
