@@ -67,12 +67,15 @@ function featherlight_theme($existing, $type, $theme, $path) {
  */
 function theme_featherlight($variables = array()) {
   $item = $variables['item'];
+  $itemFID = 'id-' . $item['fid'];
 
   // Add Featherlight library files.
   backdrop_add_library('featherlight', 'featherlight-gallery', TRUE);
   backdrop_add_js(backdrop_get_path('module', 'featherlight') . '/js/featherlight.caption.js');
   backdrop_add_js(array('featherlight' => array(
-    'caption' => $variables['caption'],
+    $itemFID => array(
+      'captionAttr' => $variables['caption'],
+    ),
   )), 'setting');
 
   // Generate content image.
@@ -82,6 +85,9 @@ function theme_featherlight($variables = array()) {
     'height' => $item['height'],
     'alt' => $item['alt'],
     'title' => $item['title'],
+    'attributes' => array(
+      'data-file-id' => $item['fid'],
+    ),
   );
   if (!empty($variables['content_image_style'])) {
     $image_variables['style_name'] = $variables['content_image_style'];
