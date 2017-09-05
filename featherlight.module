@@ -11,7 +11,7 @@ function featherlight_library_info() {
   $libraries['featherlight'] = array(
     'title' => 'Featherlight',
     'website' => 'https://noelboss.github.io/featherlight/',
-    'version' => '1.7.6',
+    'version' => '1.7.8',
     'js' => array(
       backdrop_get_path('module', 'featherlight') . '/library/featherlight.min.js' => array(),
     ),
@@ -22,7 +22,7 @@ function featherlight_library_info() {
   $libraries['featherlight-gallery'] = array(
     'title' => 'Featherlight Gallery',
     'website' => 'https://noelboss.github.io/featherlight/gallery.html',
-    'version' => '1.7.6',
+    'version' => '1.7.8',
     'js' => array(
       backdrop_get_path('module', 'featherlight') . '/library/featherlight.gallery.min.js' => array(),
     ),
