@@ -38,6 +38,151 @@ function featherlight_library_info() {
 }
 
 /**
+ * Implements hook_field_formatter_info().
+ */
+function featherlight_field_formatter_info() {
+  return array(
+    'featherlight' => array(
+      'label' => t('Featherlight'),
+      'field types' => array('image'),
+      'settings' => array(
+        'featherlight_image_style_content' => '',
+        'featherlight_image_style_lightbox' => '',
+        'featherlight_caption_attribute' => '',
+        'featherlight_gallery' => FALSE,
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function featherlight_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $settings = $instance['display'][$view_mode]['settings'];
+  $image_styles = image_style_options(FALSE, PASS_THROUGH);
+
+  $element['featherlight_image_style_content'] = array(
+    '#type' => 'select',
+    '#title' => t('Content image style'),
+    '#description' => t('The image style to use for the <em>content</em> image.'),
+    '#options' => $image_styles,
+    '#empty_option' => t('None (original image)'),
+    '#default_value' => $settings['featherlight_image_style_content'],
+  );
+  $element['featherlight_image_style_lightbox'] = array(
+    '#type' => 'select',
+    '#title' => t('Lightbox image style'),
+    '#description' => t('The image style to use for the <em>lightbox</em> image.'),
+    '#options' => $image_styles,
+    '#empty_option' => t('None (original image)'),
+    '#default_value' => $settings['featherlight_image_style_lightbox'],
+  );
+  $element['featherlight_caption_attribute'] = array(
+    '#type' => 'select',
+    '#title' => t('Caption'),
+    '#description' => t('The image attribute to use for the lightbox caption.'),
+    '#options' => array(
+      'alt' => t('Alt'),
+      'title' => t('Title'),
+    ),
+    '#empty_option' => t('None'),
+    '#default_value' => $settings['featherlight_caption_attribute'],
+  );
+  if ($field['cardinality'] != 1) {
+    $element['featherlight_gallery'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Gallery'),
+      '#description' => t('Display images in a gallery.'),
+      '#default_value' => $settings['featherlight_gallery'],
+    );
+  }
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function featherlight_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $summary = array();
+  $settings = $instance['display'][$view_mode]['settings'];
+  $image_styles = image_style_options(FALSE, PASS_THROUGH);
+
+  // Content image style.
+  if (!empty($settings['featherlight_image_style_content'])) {
+    $summary[] = t('Content image style: @content', array('@content' => $image_styles[$settings['featherlight_image_style_content']]));
+  }
+  else {
+    $summary[] = t('Content image style: None (original image)');
+  }
+
+  // Lightbox image style.
+  if (!empty($settings['featherlight_image_style_lightbox'])) {
+    $summary[] = t('Lightbox image style: @lightbox', array('@lightbox' => $image_styles[$settings['featherlight_image_style_lightbox']]));
+  }
+  else {
+    $summary[] = t('Lightbox image style: None (original image)');
+  }
+
+  // Caption.
+  if (!empty($settings['featherlight_caption_attribute'])) {
+    $summary[] = t('Caption: @caption', array('@caption' => backdrop_ucfirst($settings['featherlight_caption_attribute'])));
+  }
+  else {
+    $summary[] = t('Caption: None');
+  }
+
+  // Gallery.
+  if ($field['cardinality'] != 1) {
+    $summary[] = t('Gallery: @gallery', array('@gallery' => $settings['featherlight_gallery'] == TRUE ? 'Yes' : 'No'));
+  }
+
+  return implode('<br />', $summary);
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function featherlight_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  $settings = $display['settings'];
+
+  // Output each image as a Featherlight lightbox.
+  foreach ($items as $delta => $item) {
+    $element[$delta] = array(
+      '#theme' => 'featherlight',
+      '#item' => $item,
+      '#content_image_style' => $settings['featherlight_image_style_content'],
+      '#lightbox_image_style' => $settings['featherlight_image_style_lightbox'],
+      '#caption_attribute' => $settings['featherlight_caption_attribute'],
+      '#gallery' => $settings['featherlight_gallery'],
+    );
+  }
+
+  return $element;
+}
+
+/**
+ * Implements hook_preprocess_field().
+ */
+function featherlight_preprocess_field(&$variables) {
+  // Add data-featherlight* attributes to images.
+  if ($variables['element']['#formatter'] == 'featherlight') {
+    $variables['content_attributes']['data-featherlight-filter'] = 'a.featherlight-lightbox';
+
+    // Gallery.
+    if ($variables['items'][0]['#gallery'] == TRUE) {
+      $variables['content_attributes']['data-featherlight-gallery'] = '';
+    }
+    // Image.
+    else {
+      $variables['content_attributes']['data-featherlight'] = '';
+    }
+  }
+}
+
+/**
  * Implements hook_theme().
  */
 function featherlight_theme($existing, $type, $theme, $path) {
@@ -47,7 +192,8 @@ function featherlight_theme($existing, $type, $theme, $path) {
         'item' => array(),
         'content_image_style' => '',
         'lightbox_image_style' => '',
-        'caption' => '',
+        'caption_attribute' => '',
+        'gallery' => FALSE,
       ),
     ),
   );
@@ -61,21 +207,29 @@ function featherlight_theme($existing, $type, $theme, $path) {
  *   - item: An array of image data.
  *   - content_image_style: The image style to use for the content image.
  *   - lightbox_image_style: The image style to use for the lightbox image.
- *   - caption: The image attribute to use for the lightbox caption.
+ *   - caption_attribute: The image attribute to use for the lightbox caption.
+ *   - gallery: Whether or not multiple images should be displayed in a gallery.
  *
  * @ingroup themeable
  */
 function theme_featherlight($variables = array()) {
   $item = $variables['item'];
-  $itemFID = 'id-' . $item['fid'];
 
   // Add Featherlight library files.
-  backdrop_add_library('featherlight', 'featherlight-gallery', TRUE);
+  backdrop_add_library('featherlight', 'featherlight', TRUE);
+  if ($variables['gallery'] == TRUE) {
+    backdrop_add_library('featherlight', 'featherlight-gallery', TRUE);
+  }
   backdrop_add_js(backdrop_get_path('module', 'featherlight') . '/js/featherlight.caption.js');
+
+  // Add Featherlight settings.
+  $settings = array('captionEnabled' => FALSE);
+  if (!empty($variables['caption_attribute'])) {
+    $settings['captionEnabled'] = TRUE;
+    $settings['captionAttr'] = $variables['caption_attribute'];
+  }
   backdrop_add_js(array('featherlight' => array(
-    $itemFID => array(
-      'captionAttr' => $variables['caption'],
-    ),
+    'id-' . $item['fid'] => $settings,
   )), 'setting');
 
   // Generate content image.
@@ -108,122 +262,11 @@ function theme_featherlight($variables = array()) {
   // Generate link options.
   $options = array(
     'attributes' => array(
-      'data-featherlight' => 'image',
       'class' => array('featherlight-lightbox'),
     ),
     'html' => TRUE,
   );
 
   return l($image, $url, $options);
-}
-
-/**
- * Implements hook_field_formatter_info().
- */
-function featherlight_field_formatter_info() {
-  return array(
-    'featherlight' => array(
-      'label' => t('Featherlight'),
-      'field types' => array('image'),
-      'settings' => array(
-        'featherlight_image_style_content' => '',
-        'featherlight_image_style_lightbox' => '',
-        'featherlight_caption' => '',
-      ),
-    ),
-  );
-}
-
-/**
- * Implements hook_field_formatter_settings_form().
- */
-function featherlight_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
-  $display = $instance['display'][$view_mode];
-  $settings = $display['settings'];
-
-  $image_styles = image_style_options(FALSE, PASS_THROUGH);
-
-  $element['featherlight_image_style_content'] = array(
-    '#type' => 'select',
-    '#title' => t('Content image style'),
-    '#description' => t('The image style to use for the <em>content</em> image.'),
-    '#options' => $image_styles,
-    '#empty_option' => t('None (original image)'),
-    '#default_value' => $settings['featherlight_image_style_content'],
-  );
-  $element['featherlight_image_style_lightbox'] = array(
-    '#type' => 'select',
-    '#title' => t('Lightbox image style'),
-    '#description' => t('The image style to use for the <em>lightbox</em> image.'),
-    '#options' => $image_styles,
-    '#empty_option' => t('None (original image)'),
-    '#default_value' => $settings['featherlight_image_style_lightbox'],
-  );
-  $element['featherlight_caption'] = array(
-    '#type' => 'select',
-    '#title' => t('Caption'),
-    '#description' => t('The image attribute to use for the lightbox caption.'),
-    '#options' => array(
-      'alt' => t('Alt'),
-      'title' => t('Title'),
-    ),
-    '#empty_option' => t('None'),
-    '#default_value' => $settings['featherlight_caption'],
-  );
-
-  return $element;
-}
-
-/**
- * Implements hook_field_formatter_settings_summary().
- */
-function featherlight_field_formatter_settings_summary($field, $instance, $view_mode) {
-  $summary = array();
-  $display = $instance['display'][$view_mode];
-  $settings = $display['settings'];
-  $image_styles = image_style_options(FALSE, PASS_THROUGH);
-
-  if (!empty($settings['featherlight_image_style_content'])) {
-    $summary[] = t('Content image style: @content', array('@content' => $image_styles[$settings['featherlight_image_style_content']]));
-  }
-  else {
-    $summary[] = t('Content image style: None (original image)');
-  }
-
-  if (!empty($settings['featherlight_image_style_lightbox'])) {
-    $summary[] = t('Lightbox image style: @lightbox', array('@lightbox' => $image_styles[$settings['featherlight_image_style_lightbox']]));
-  }
-  else {
-    $summary[] = t('Lightbox image style: None (original image)');
-  }
-
-  if (!empty($settings['featherlight_caption'])) {
-    $summary[] = t('Caption: @caption', array('@caption' => backdrop_ucfirst($settings['featherlight_caption'])));
-  }
-  else {
-    $summary[] = t('Caption: None');
-  }
-
-  return implode('<br />', $summary);
-}
-
-/**
- * Implements hook_field_formatter_view().
- */
-function featherlight_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-  $element = array();
-  $settings = $display['settings'];
-
-  foreach ($items as $delta => $item) {
-    $element[$delta] = array(
-      '#theme' => 'featherlight',
-      '#item' => $item,
-      '#content_image_style' => $settings['featherlight_image_style_content'],
-      '#lightbox_image_style' => $settings['featherlight_image_style_lightbox'],
-      '#caption' => $settings['featherlight_caption'],
-    );
-  }
-
-  return $element;
 }
 
