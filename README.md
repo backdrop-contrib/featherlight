@@ -17,8 +17,8 @@ Installation
   Featherlight (admin/config/media/featherlight) to configure the global
   settings.
 
-- Enable the Featherlight field formatter in your content type display, or in a
-  view, where you have an image field.
+- Enable and configure the Featherlight field formatter in a content type
+  display or a view where you have an image field.
 
 Issues
 ------
@@ -34,8 +34,7 @@ Current Maintainers
 Credits
 -------
 
-- Integration of the Featherlight jQuery plugin
-  (https://noelboss.github.io/featherlight/).
+- Featherlight jQuery plugin (https://noelboss.github.io/featherlight/).
 
 License
 -------
