@@ -2,4 +2,5 @@ name = Featherlight
 description = A very lightweight jQuery lightbox plugin.
 backdrop = 1.x
 type = module
+configure = admin/config/media/featherlight
 
