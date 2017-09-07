@@ -6,6 +6,9 @@
   "closeonesc": true,
   "closeicon": "&#10005;",
   "otherclose": "",
-  "loading": ""
+  "loading": "",
+  "every_page": false,
+  "caption_attribute": "",
+  "gallery": false
 }
 

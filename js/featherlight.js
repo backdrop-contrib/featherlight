@@ -19,11 +19,25 @@ Backdrop.behaviors.featherlight = {
 
     // Add caption.
     $.featherlight.prototype.afterContent = function() {
+      var caption = false;
       var img = this.$currentTarget.find('img');
       var key = 'id-' + img.attr('data-file-id');
-      var imgSettings = settings.featherlight[key];
-      if (imgSettings.captionEnabled) {
-        var caption = img.attr(imgSettings.captionAttr);
+      var captionAttr = settings.featherlight.files[key];
+
+      if (typeof captionAttr !== 'undefined') {
+        // Caption attribute taken from field formatter settings.
+        if (captionAttr) {
+          var caption = img.attr(captionAttr);
+        }
+      }
+      else {
+        // Caption attribute taken from global settings.
+        if (settings.featherlight.caption_attribute) {
+          var caption = img.attr(settings.featherlight.caption_attribute);
+        }
+      }
+
+      if (caption) {
         this.$instance.find('.featherlight-caption').remove();
         $('<div class="featherlight-caption">').text(caption).appendTo(this.$instance.find('.featherlight-content'));
       }

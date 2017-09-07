@@ -68,6 +68,47 @@ function featherlight_admin_form($form, &$form_state) {
     '#description' => t("Content to show while the lightbox is loading (like a spinner). Default is empty."),
     '#default_value' => $config->get('loading'),
   );
+
+  $form['manual'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Manual use'),
+    '#description' => t("Settings for when you want to load the lightbox manually."),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['manual']['every_page'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Load on every page'),
+    '#description' => t("Load the Featherlight library files on every page."),
+    '#default_value' => $config->get('every_page'),
+  );
+  $form['manual']['caption_attribute'] = array(
+    '#type' => 'select',
+    '#title' => t('Caption'),
+    '#description' => t('The image attribute to use for the lightbox caption.'),
+    '#options' => array(
+      'alt' => t('Alt'),
+      'title' => t('Title'),
+    ),
+    '#empty_option' => t('None'),
+    '#default_value' => $config->get('caption_attribute'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="every_page"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+  $form['manual']['gallery'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Gallery'),
+    '#description' => t("Display images in a gallery."),
+    '#default_value' => $config->get('gallery'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="every_page"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
   $form['#config'] = 'featherlight.settings';
 
   return system_settings_form($form);

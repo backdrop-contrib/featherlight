@@ -32,13 +32,10 @@ function theme_featherlight($variables = array()) {
   $config = config_get('featherlight.settings');
   backdrop_add_js(array('featherlight' => $config), 'setting');
   // File-specific.
-  $file_settings = array('captionEnabled' => FALSE);
-  if (!empty($variables['caption_attribute'])) {
-    $file_settings['captionEnabled'] = TRUE;
-    $file_settings['captionAttr'] = $variables['caption_attribute'];
-  }
   backdrop_add_js(array('featherlight' => array(
-    'id-' . $item['fid'] => $file_settings,
+    'files' => array(
+      'id-' . $item['fid'] => $variables['caption_attribute'],
+    ),
   )), 'setting');
 
   // Generate content image.

@@ -84,6 +84,25 @@ function featherlight_theme($existing, $type, $theme, $path) {
 }
 
 /**
+ * Implements hook_init().
+ */
+function featherlight_init() {
+  $config = config_get('featherlight.settings');
+
+  if ($config['every_page'] == TRUE && !backdrop_installation_attempted()) {
+    // Add Featherlight library files.
+    backdrop_add_library('featherlight', 'featherlight', TRUE);
+    if ($config['gallery'] == TRUE) {
+      backdrop_add_library('featherlight', 'featherlight-gallery', TRUE);
+    }
+    backdrop_add_js(backdrop_get_path('module', 'featherlight') . '/js/featherlight.js');
+
+    // Add Featherlight settings.
+    backdrop_add_js(array('featherlight' => $config), 'setting');
+  }
+}
+
+/**
  * Implements hook_field_formatter_info().
  */
 function featherlight_field_formatter_info() {
