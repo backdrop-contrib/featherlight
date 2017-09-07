@@ -1,0 +1,11 @@
+{
+  "_config_name": "featherlight.settings",
+  "openspeed": 250,
+  "closespeed": 250,
+  "closeonclick": "background",
+  "closeonesc": true,
+  "closeicon": "&#10005;",
+  "otherclose": "",
+  "loading": ""
+}
+

@@ -1,16 +1,11 @@
-The Name of My Project
-======================
+Featherlight
+============
 
-Foo project enables you to do bar. The first paragraph of this file should be
-kept short as it will be used as the project summary on backdropcms.org. Aim for
-about 240 characters (three lines at 80 characters each).
+Featherlight is a very lightweight jQuery lightbox plugin. It is responsive, has
+the ability to display captions with images, and can display multiple images in
+a slideshow-like gallery.
 
-All lines in this file should be no more than 80 characters long for legibility,
-unless including a URL or example that requires the line not wrap. (The first
-line of this paragraph is 80 characters for reference.)
-
-Detail in READMEs should be limited to the minimum required for installation and
-getting started. More detailed documentation should be moved to a GitHub wiki page. https://github.com/backdrop-contrib/setup/wiki/Documentation
+This module provides a Featherlight field formatter for Backdrop.
 
 Installation
 ------------
@@ -18,35 +13,29 @@ Installation
 - Install this module using the official Backdrop CMS instructions at
   https://backdropcms.org/guide/modules
 
-- Visit the configuration page under Administration > Configuration > Category >
-  Foo (admin/config/category/foo) and enter the required information.
+- Visit the configuration page under Administration > Configuration > Media >
+  Featherlight (admin/config/media/featherlight) to configure the global
+  settings.
 
-- Any additional steps.
-
-Documentation
--------------
-
-Additional documentation is located in the Wiki:
-https://github.com/backdrop-contrib/foo-project/wiki/Documentation
+- Enable the Featherlight field formatter in your content type display, or in a
+  view, where you have an image field.
 
 Issues
 ------
 
 Bugs and Feature requests should be reported in the Issue Queue:
-https://github.com/backdrop-contrib/foo-project/issues
+https://github.com/backdrop-contrib/featherlight/issues
 
 Current Maintainers
 -------------------
 
-- John Smith (https://github.com/username/)
-- Jane Smith (https://github.com/username/)
+- Peter Anderson (https://github.com/BWPanda/)
 
 Credits
 -------
 
-- Ported to Backdrop CMS by Betty Boop (https://github.com/username).
-- Originally written for Drupal by Bob Brown (https://github.com/username).
-- Based on Barbara Bailey's MagicalCode project (https://github.com/example).
+- Integration of the Featherlight jQuery plugin
+  (https://noelboss.github.io/featherlight/).
 
 License
 -------
