@@ -5,7 +5,8 @@ Featherlight is a very lightweight jQuery lightbox plugin. It is responsive, has
 the ability to display captions with images, and can display multiple images in
 a slideshow-like gallery.
 
-This module provides a Featherlight field formatter for Backdrop.
+This module provides a Featherlight field formatter, as well as the ability to
+load the Featherlight library manually.
 
 Installation
 ------------
@@ -15,10 +16,16 @@ Installation
 
 - Visit the configuration page under Administration > Configuration > Media >
   Featherlight (admin/config/media/featherlight) to configure the global
-  settings.
+  settings and/or enable manual use.
 
 - Enable and configure the Featherlight field formatter in a content type
   display or a view where you have an image field.
+
+  OR
+
+  Add the 'data-featherlight' attribute to your links manually
+  (see https://github.com/noelboss/featherlight#user-content-usage for more
+  details)
 
 Issues
 ------

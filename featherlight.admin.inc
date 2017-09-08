@@ -109,8 +109,8 @@ function featherlight_admin_form($form, &$form_state) {
       ),
     ),
   );
-  $form['#config'] = 'featherlight.settings';
 
+  $form['#config'] = 'featherlight.settings';
   return system_settings_form($form);
 }
 
