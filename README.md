@@ -25,7 +25,7 @@ Installation
 
   Add the 'data-featherlight' attribute to your links manually
   (see https://github.com/noelboss/featherlight#user-content-usage for more
-  details)
+  details).
 
 Issues
 ------
