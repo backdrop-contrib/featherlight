@@ -19,27 +19,31 @@ Backdrop.behaviors.featherlight = {
 
     // Add caption.
     $.featherlight.prototype.afterContent = function() {
+      var captionAttr = false;
       var caption = false;
       var img = this.$currentTarget.find('img');
-      var key = 'id-' + img.attr('data-file-id');
-      var captionAttr = settings.featherlight.files[key];
 
-      if (typeof captionAttr !== 'undefined') {
-        // Caption attribute taken from field formatter settings.
-        if (captionAttr) {
-          var caption = img.attr(captionAttr);
+      // Get caption attribute.
+      if (settings.featherlight.hasOwnProperty('files')) {
+        if (typeof img.attr('data-file-id') !== 'undefined') {
+          var key = 'id-' + img.attr('data-file-id');
+          captionAttr = settings.featherlight.files[key];
         }
       }
       else {
-        // Caption attribute taken from global settings.
         if (settings.featherlight.caption_attribute) {
-          var caption = img.attr(settings.featherlight.caption_attribute);
+          captionAttr = settings.featherlight.caption_attribute;
         }
       }
 
-      if (caption) {
-        this.$instance.find('.featherlight-caption').remove();
-        $('<div class="featherlight-caption">').text(caption).appendTo(this.$instance.find('.featherlight-content'));
+      // Get and set caption.
+      if (captionAttr) {
+        caption = img.attr(captionAttr);
+
+        if (caption) {
+          this.$instance.find('.featherlight-caption').remove();
+          $('<div class="featherlight-caption">').text(caption).appendTo(this.$instance.find('.featherlight-content'));
+        }
       }
     };
 
