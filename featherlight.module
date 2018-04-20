@@ -212,6 +212,7 @@ function featherlight_field_formatter_settings_summary($field, $instance, $view_
  */
 function featherlight_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   $settings = $display['settings'];
+  $element = array();
 
   // Output each image as a Featherlight lightbox.
   foreach ($items as $delta => $item) {
