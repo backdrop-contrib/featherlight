@@ -24,25 +24,16 @@ function featherlight_admin_form($form, &$form_state) {
     '#default_value' => $config->get('closespeed'),
     '#min' => 1,
   );
-  // Disabled, as 'anywhere' doesn't work with galleries.
-  // @see: https://github.com/noelboss/featherlight/issues/324
-  // $form['closeonclick'] = array(
-  //   '#type' => 'select',
-  //   '#title' => t('Close on click'),
-  //   '#description' => t("Close the lightbox when clicking this. Default is Background."),
-  //   '#options' => array(
-  //     FALSE => t('Disabled'),
-  //     'background' => t('Background'),
-  //     'anywhere' => t('Anything'),
-  //   ),
-  //   '#default_value' => $config->get('closeonclick'),
-  // );
   $form['closeonclick'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Close on background'),
-    '#description' => t("Close the lightbox when clicking on the background. Default is true."),
+    '#type' => 'select',
+    '#title' => t('Close on click'),
+    '#description' => t("Close the lightbox when clicking this. Default is Background."),
+    '#options' => array(
+      FALSE => t('Disabled'),
+      'background' => t('Background'),
+      'anywhere' => t('Anything'),
+    ),
     '#default_value' => $config->get('closeonclick'),
-    '#return_value' => 'background',
   );
   $form['closeonesc'] = array(
     '#type' => 'checkbox',
