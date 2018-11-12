@@ -13,16 +13,18 @@ function featherlight_admin_form($form, &$form_state) {
   $form['openspeed'] = array(
     '#type' => 'number',
     '#title' => t('Open speed'),
-    '#description' => t("The duration (in 'ms') of the opening animation. Default is 250."),
+    '#description' => t("The duration of the opening animation. Default is 250."),
     '#default_value' => $config->get('openspeed'),
     '#min' => 1,
+    '#field_suffix' => t('ms'),
   );
   $form['closespeed'] = array(
     '#type' => 'number',
     '#title' => t('Close speed'),
-    '#description' => t("The duration (in 'ms') of the closing animation. Default is 250."),
+    '#description' => t("The duration of the closing animation. Default is 250."),
     '#default_value' => $config->get('closespeed'),
     '#min' => 1,
+    '#field_suffix' => t('ms'),
   );
   $form['closeonclick'] = array(
     '#type' => 'select',
@@ -38,7 +40,7 @@ function featherlight_admin_form($form, &$form_state) {
   $form['closeonesc'] = array(
     '#type' => 'checkbox',
     '#title' => t('Close on ESC'),
-    '#description' => t("Close the lightbox when pressing the ESC key. Default is true."),
+    '#description' => t("Close the lightbox when pressing the ESC key. Default is TRUE."),
     '#default_value' => $config->get('closeonesc'),
   );
   $form['closeicon'] = array(
