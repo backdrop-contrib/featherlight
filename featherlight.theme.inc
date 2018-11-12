@@ -28,15 +28,11 @@ function theme_featherlight($variables = array()) {
   backdrop_add_js(backdrop_get_path('module', 'featherlight') . '/js/featherlight.js');
 
   // Add Featherlight settings.
-  // Global.
   $config = config_get('featherlight.settings');
+  $config['files'] = array(
+    'id-' . $item['fid'] => $variables['caption_attribute'],
+  );
   backdrop_add_js(array('featherlight' => $config), 'setting');
-  // File-specific.
-  backdrop_add_js(array('featherlight' => array(
-    'files' => array(
-      'id-' . $item['fid'] => $variables['caption_attribute'],
-    ),
-  )), 'setting');
 
   // Generate content image.
   $image_variables = array(
@@ -67,11 +63,14 @@ function theme_featherlight($variables = array()) {
 
   // Generate link options.
   $options = array(
-    'attributes' => array(
-      'class' => array('featherlight-lightbox'),
-    ),
     'html' => TRUE,
   );
+  if ($variables['gallery'] != TRUE) {
+    $options['attributes']['class'][] = 'fl-image';
+  }
+  else {
+    $options['attributes']['class'][] = 'fl-gallery';
+  }
 
   return l($image, $url, $options);
 }

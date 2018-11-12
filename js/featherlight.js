@@ -9,13 +9,22 @@ Backdrop.behaviors.featherlight = {
   attach: function(context, settings) {
 
     // Set Featherlight options.
-    $.featherlight.defaults.openSpeed = Number(settings.featherlight.openspeed);
-    $.featherlight.defaults.closeSpeed = Number(settings.featherlight.closespeed);
-    $.featherlight.defaults.closeOnClick = settings.featherlight.closeonclick;
-    $.featherlight.defaults.closeOnEsc = settings.featherlight.closeonesc;
-    $.featherlight.defaults.closeIcon = settings.featherlight.closeicon;
-    $.featherlight.defaults.otherClose = settings.featherlight.otherclose;
-    $.featherlight.defaults.loading = settings.featherlight.loading;
+    var options = {
+      type: 'image',
+      openSpeed: Number(settings.featherlight.openspeed),
+      closeSpeed: Number(settings.featherlight.closespeed),
+      closeOnClick: settings.featherlight.closeonclick,
+      closeOnEsc: settings.featherlight.closeonesc,
+      closeIcon: settings.featherlight.closeicon,
+      otherClose: settings.featherlight.otherclose,
+      loading: settings.featherlight.loading,
+    };
+
+    // Bind Featherlight to image(s).
+    $('a.fl-image').featherlight(options);
+    if (typeof $.featherlightGallery === 'function') {
+      $('a.fl-gallery').featherlightGallery(options);
+    }
 
     // Add caption.
     $.featherlight.prototype.afterContent = function() {
@@ -37,11 +46,11 @@ Backdrop.behaviors.featherlight = {
       }
 
       // Get and set caption.
+      this.$instance.find('.featherlight-caption').remove();
       if (captionAttr) {
         caption = img.attr(captionAttr);
 
         if (caption) {
-          this.$instance.find('.featherlight-caption').remove();
           $('<div class="featherlight-caption">').text(caption).appendTo(this.$instance.find('.featherlight-content'));
         }
       }

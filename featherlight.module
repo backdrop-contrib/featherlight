@@ -156,7 +156,7 @@ function featherlight_field_formatter_settings_form($field, $instance, $view_mod
     '#empty_option' => t('None'),
     '#default_value' => $settings['featherlight_caption_attribute'],
   );
-  if ($field['cardinality'] != 1) {
+  if ($field['cardinality'] != 1 || $instance['entity_type'] == 'views') {
     $element['featherlight_gallery'] = array(
       '#type' => 'checkbox',
       '#title' => t('Gallery'),
@@ -227,24 +227,5 @@ function featherlight_field_formatter_view($entity_type, $entity, $field, $insta
   }
 
   return $element;
-}
-
-/**
- * Implements hook_preprocess_field().
- */
-function featherlight_preprocess_field(&$variables) {
-  // Add data-featherlight* attributes to images.
-  if ($variables['element']['#formatter'] == 'featherlight') {
-    $variables['content_attributes']['data-featherlight-filter'] = 'a.featherlight-lightbox';
-
-    // Gallery.
-    if ($variables['items'][0]['#gallery'] == TRUE) {
-      $variables['content_attributes']['data-featherlight-gallery'] = '';
-    }
-    // Image.
-    else {
-      $variables['content_attributes']['data-featherlight'] = '';
-    }
-  }
 }
 
