@@ -47,11 +47,14 @@ Backdrop.behaviors.featherlight = {
 
       // Get and set caption.
       this.$instance.find('.featherlight-caption').remove();
+      this.$instance.find('.featherlight-content').css('padding-bottom', '0');
       if (captionAttr) {
         caption = img.attr(captionAttr);
 
         if (caption) {
           $('<div class="featherlight-caption">').text(caption).appendTo(this.$instance.find('.featherlight-content'));
+          var captionHeight = this.$instance.find('.featherlight-caption').height();
+          this.$instance.find('.featherlight-content').css('padding-bottom', captionHeight + 'px');
         }
       }
     };
