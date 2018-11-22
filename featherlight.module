@@ -97,6 +97,7 @@ function featherlight_init() {
         backdrop_add_library('featherlight', 'featherlight-gallery', TRUE);
       }
       backdrop_add_js(backdrop_get_path('module', 'featherlight') . '/js/featherlight.js');
+      backdrop_add_css(backdrop_get_path('module', 'featherlight') . '/css/featherlight.css');
 
       // Add Featherlight settings.
       backdrop_add_js(array('featherlight' => $config), 'setting');

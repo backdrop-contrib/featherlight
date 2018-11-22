@@ -26,6 +26,7 @@ function theme_featherlight($variables = array()) {
     backdrop_add_library('featherlight', 'featherlight-gallery', TRUE);
   }
   backdrop_add_js(backdrop_get_path('module', 'featherlight') . '/js/featherlight.js');
+  backdrop_add_css(backdrop_get_path('module', 'featherlight') . '/css/featherlight.css');
 
   // Add Featherlight settings.
   $config = config_get('featherlight.settings');
