@@ -55,11 +55,22 @@ function featherlight_admin_form($form, &$form_state) {
     '#description' => t("Selector for alternative close button(s) (e.g. 'a.close'). Default is empty."),
     '#default_value' => $config->get('otherclose'),
   );
+  $form['loader'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Display spinner'),
+    '#description' => t("Show an animated spinner while the lightbox is loading."),
+    '#default_value' => $config->get('loader'),
+  );
   $form['loading'] = array(
     '#type' => 'textfield',
     '#title' => t('Loading'),
     '#description' => t("Content to show while the lightbox is loading (like a spinner). Default is empty."),
     '#default_value' => $config->get('loading'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="loader"]' => array('checked' => FALSE),
+      ),
+    ),
   );
 
   $form['manual'] = array(
