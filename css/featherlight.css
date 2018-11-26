@@ -3,6 +3,7 @@
  * Custom styling for Featherlight.
  */
 
+/* Caption */
 .featherlight .featherlight-caption {
   background: rgba(0, 0, 0, 0.5);
   bottom: 0;
@@ -18,4 +19,51 @@
     left: 10px;
     right: 10px;
   }
+}
+
+/* Loader */
+/* @see https://github.com/noelboss/featherlight/wiki/Add-a-CSS-Only-Loader */
+@keyframes featherlightLoader {
+  0% {
+    transform: rotate(0);
+    -webkit-transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes featherlightLoader {
+  0% {
+    transform: rotate(0);
+    -webkit-transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+.featherlight-loading.loader .featherlight-content {
+  animation: featherlightLoader 1s infinite linear;
+    -webkit-animation: featherlightLoader 1s infinite linear;
+  background: transparent;
+  border: 8px solid #8f8f8f;
+  border-left-color: #fff;
+  border-radius: 80px;
+  height: 80px;
+  min-width: 0;
+  width: 80px;
+}
+
+.featherlight-loading.loader .featherlight-content > * {
+  display: none !important;
+}
+
+.featherlight-loading.loader .featherlight-close,
+.featherlight-loading.loader .featherlight-inner {
+  display: none;
 }

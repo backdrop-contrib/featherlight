@@ -26,7 +26,13 @@ Backdrop.behaviors.featherlight = {
       $('a.fl-gallery').featherlightGallery(options);
     }
 
-    // Add caption.
+    $.featherlight.prototype.beforeContent = function() {
+      // Add class for loader.
+      if (settings.featherlight.loader) {
+        this.$instance.addClass('loader');
+      }
+    };
+
     $.featherlight.prototype.afterContent = function() {
       var img = this.$currentTarget.find('img');
       var captionAttr = false;
