@@ -28,9 +28,9 @@ Backdrop.behaviors.featherlight = {
 
     // Add caption.
     $.featherlight.prototype.afterContent = function() {
+      var img = this.$currentTarget.find('img');
       var captionAttr = false;
       var caption = false;
-      var img = this.$currentTarget.find('img');
 
       // Get caption attribute.
       if (settings.featherlight.hasOwnProperty('files')) {
