@@ -13,7 +13,9 @@ function featherlight_library_info() {
     'website' => 'https://noelboss.github.io/featherlight/',
     'version' => '1.7.13',
     'js' => array(
-      backdrop_get_path('module', 'featherlight') . '/library/featherlight.min.js' => array(),
+      backdrop_get_path('module', 'featherlight') . '/library/featherlight.min.js' => array(
+        'weight' => 1,
+      ),
     ),
     'css' => array(
       backdrop_get_path('module', 'featherlight') . '/library/featherlight.min.css' => array(),
@@ -24,13 +26,28 @@ function featherlight_library_info() {
     'website' => 'https://noelboss.github.io/featherlight/gallery.html',
     'version' => '1.7.13',
     'js' => array(
-      backdrop_get_path('module', 'featherlight') . '/library/featherlight.gallery.min.js' => array(),
+      backdrop_get_path('module', 'featherlight') . '/library/featherlight.gallery.min.js' => array(
+        'weight' => 2,
+      ),
     ),
     'css' => array(
       backdrop_get_path('module', 'featherlight') . '/library/featherlight.gallery.min.css' => array(),
     ),
     'dependencies' => array(
       array('featherlight', 'featherlight'),
+    ),
+  );
+  $libraries['detect-swipe'] = array(
+    'title' => 'Detect Swipe',
+    'website' => 'https://github.com/marcandre/detect_swipe',
+    'version' => '2.1.3',
+    'js' => array(
+      backdrop_get_path('module', 'featherlight') . '/library/jquery.detect_swipe.js' => array(
+        'weight' => 0,
+      ),
+    ),
+    'dependencies' => array(
+      array('featherlight', 'featherlight-gallery'),
     ),
   );
 
@@ -95,6 +112,9 @@ function featherlight_init() {
       backdrop_add_library('featherlight', 'featherlight', TRUE);
       if ($config['gallery'] == TRUE) {
         backdrop_add_library('featherlight', 'featherlight-gallery', TRUE);
+      }
+      if ($config['swipe'] == TRUE) {
+        backdrop_add_library('featherlight', 'detect-swipe', TRUE);
       }
       backdrop_add_js(backdrop_get_path('module', 'featherlight') . '/js/featherlight.js');
       backdrop_add_css(backdrop_get_path('module', 'featherlight') . '/css/featherlight.css');

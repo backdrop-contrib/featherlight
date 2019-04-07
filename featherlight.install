@@ -1,0 +1,13 @@
+<?php
+/**
+ * @file
+ * Install, update, and uninstall functions for the Featherlight module.
+ */
+
+/**
+ * Setup new 'swipe' option.
+ */
+function featherlight_update_1100(&$sandbox) {
+  config_set('featherlight.settings', 'swipe', FALSE);
+}
+

@@ -10,6 +10,7 @@
   "loading": "",
   "every_page": false,
   "caption_attribute": "",
-  "gallery": false
+  "gallery": false,
+  "swipe": false
 }
 

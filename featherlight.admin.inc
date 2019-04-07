@@ -72,6 +72,12 @@ function featherlight_admin_form($form, &$form_state) {
       ),
     ),
   );
+  $form['swipe'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Swipe'),
+    '#description' => t("Allows swiping on touch-enabled devices to navigate between images in a gallery."),
+    '#default_value' => $config->get('swipe'),
+  );
 
   $form['manual'] = array(
     '#type' => 'fieldset',
