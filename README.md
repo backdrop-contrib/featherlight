@@ -36,11 +36,12 @@ https://github.com/backdrop-contrib/featherlight/issues
 Current Maintainers
 -------------------
 
-- Peter Anderson (https://github.com/BWPanda/)
+- Seeking maintainer(s)
 
 Credits
 -------
 
+- Developed for Backdrop CMS by [Peter Anderson](https://github.com/BWPanda).
 - Featherlight jQuery plugin (https://noelboss.github.io/featherlight/).
 
 License
